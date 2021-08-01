@@ -10,3 +10,7 @@
   padding: 20px;
   border-bottom: 1px solid lightgray;
 }
+.app__signup {
+  display: flex; /* Throws every html element in a row */
+  flex-direction: column; /* Makes the above style throw all the elements in a column */
+}
