@@ -1,9 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Post.css";
 import { Avatar } from "@material-ui/core";
+import { db } from "./firebase";
+import firebase from "firebase";
 
 function Post(props) {
-  const { username, imageUrl, caption } = props;
+  const { username, imageUrl, caption, postId, currentUser } = props;
+  console.log(currentUser);
+  console.log(postId);
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
+  useEffect(() => {
+    let unsubscribe;
+    if (postId) {
+      unsubscribe = db
+        .collection("posts")
+        .doc(postId)
+        .collection("comments")
+        .orderBy("timeStamp", "asc")
+        .onSnapshot((snapshot) => {
+          const comments = snapshot.docs.map((doc) => doc.data());
+          console.log(comments);
+          setComments(comments);
+        });
+    }
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [postId]);
+  const postComment = (event) => {
+    event.preventDefault();
+    console.log("Posting it");
+    db.collection("posts").doc(postId).collection("comments").add({
+      text: comment,
+      username: currentUser.displayName,
+      timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    setComment("");
+  };
   return (
     <div className="post">
       {/* header -> avatar + username */}
@@ -21,6 +55,34 @@ function Post(props) {
       <h3 className="post__text">
         <strong>{username}</strong> {caption}
       </h3>
+      {console.log("render", comments)}
+      <div className="post__comments">
+        {comments.map((comment) => (
+          <p>
+            <strong>{comment.username + ": "}</strong>
+            {comment.text}
+          </p>
+        ))}
+      </div>
+      {currentUser && (
+        <form className="post__commentBox">
+          <input
+            className="post__input"
+            type="text"
+            placeholder="Add a comment..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button
+            className="post__button"
+            disabled={!comment}
+            type="submit"
+            onClick={postComment}
+          >
+            Post
+          </button>
+        </form>
+      )}
     </div>
   );
 }
