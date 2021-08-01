@@ -10,11 +10,11 @@ function ImageUpload({ username }) {
   const [progress, setProgress] = useState(0);
   const handleChange = (event) => {
     const image = event.target.files[0];
-    console.log(image);
+    // console.log(image);
     if (image) setImage(image);
   };
   const handleUpload = () => {
-    console.log("Uploading ", image);
+    // console.log("Uploading ", image);
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       "state_changed",
@@ -27,7 +27,7 @@ function ImageUpload({ username }) {
       },
       (error) => {
         // error function
-        console.log(error);
+        // console.log(error);
         alert(error.message);
       },
       () => {

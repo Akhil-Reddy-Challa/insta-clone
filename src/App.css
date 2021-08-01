@@ -30,3 +30,11 @@
   display: flex; /* Throws every html element in a row */
   flex-direction: column; /* Makes the above style throw all the elements in a column */
 }
+
+.app__userBio {
+  display: flex; /* Throws every html element in a row */
+  /* align-items: center; */
+}
+.app__avatar {
+  margin-right: 10px;
+}

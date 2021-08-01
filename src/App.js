@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { auth, db } from "./firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { Button, Input } from "@material-ui/core";
+import { Button, Input, Avatar } from "@material-ui/core";
 import ImageUpload from "./ImageUpload";
 
 function getModalStyle() {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [modalStyle, setModalStyle] = useState(getModalStyle);
+  const [modalStyle] = useState(getModalStyle);
   const [posts, setPosts] = useState([]);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -67,7 +67,7 @@ function App() {
   }, [user, username]);
   const signUp = (event) => {
     event.preventDefault();
-    console.log("Sign up module");
+    // console.log("Sign up module");
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -200,6 +200,16 @@ function App() {
             // In future you could display suggestions or ads on the right
           }
         </div>
+        {user && (
+          <div className="app__userBio">
+            <Avatar
+              className="app__avatar"
+              alt={username}
+              src="/static/images/avatar/1.jpg"
+            />
+            <p>{username}</p>
+          </div>
+        )}
       </div>
 
       {user?.displayName ? (
